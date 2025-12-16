@@ -1,157 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎄 A Tiny Secret 🎁</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎄 Secret Santa 🎁</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
-      min-height: 100vh;
-      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #2c5364;
+      color: #fff;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: #fff;
+      min-height: 100vh;
+      margin: 0;
     }
-
     .card {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 40px 30px;
-      width: 90%;
-      max-width: 420px;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      background: rgba(255,255,255,0.1);
+      padding: 40px;
+      border-radius: 20px;
+      width: 500px;
     }
-
-    h1 {
-      font-weight: 600;
-      margin-bottom: 12px;
+    h1, p{margin-bottom:10px;}
+    .voucher{
+      background: rgba(255,255,255,0.2);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
     }
-
-    p {
-      font-size: 15px;
-      line-height: 1.7;
-      margin-bottom: 25px;
-      opacity: 0.95;
-    }
-
-    .voucher {
-      background: rgba(255, 255, 255, 0.18);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 25px;
-      font-size: 17px;
-      font-weight: 500;
-    }
-
     .button {
-      display: inline-block;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      padding: 12px 25px;
+      border-radius: 20px;
+      background: orange;
       color: #222;
-      text-decoration: none;
-      padding: 14px 26px;
-      border-radius: 30px;
-      font-weight: 600;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      margin-top: 10px;
     }
-
-    .button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    .game {
+      display: none;
+      margin-top: 20px;
     }
-
-    .footer {
-      margin-top: 25px;
-      font-size: 13px;
-      opacity: 0.8;
+    .boxes {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .box {
+      width: 80px;
+      height: 80px;
+      background: #ff6666;
+      border-radius: 15px;
+      cursor: pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 2rem;
+      transition: transform 0.2s;
+    }
+    .box:hover {
+      transform: scale(1.1);
     }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Hey you 👀🎄</h1>
-    <p>
-      Looks like your Secret Santa left something behind 👻<br />
-      No clues. No names. Just a little festive surprise.
-    </p>
-
+    <p>Looks like your Secret Santa left something behind 👻<br>No clues. No names. Just a little festive surprise.</p>
+    
     <div class="voucher">
-      🎁 Something special is waiting for you<br />
-      No labels, no spoilers — just unwrap and see ✨
+      🎁 Something special is waiting for you<br>No labels, no spoilers — just unwrap and see ✨
+    </div>
+    
+    <button class="button" id="start-game">Unwrap your gift ✨</button>
+    
+    <div class="game" id="game-card">
+      <p>Click the **right gift box** to unlock your surprise!</p>
+      <div class="boxes" id="boxes-container"></div>
     </div>
 
-    <!-- Replace this link with your actual Amazon voucher link -->
-    <a href="https://www.amazon.in/g/7SCT9U9CGRVRHC55?ref=gc_yo" target="_blank" class="button">
-      Unwrap your gift ✨
-    </a>
-
-    <div class="footer">
-      <p>Enjoy the cheer ✨</p>
-      <p>— Your (very secret) Santa 🎅</p>
-    </div>
+    <p>Enjoy the cheer ✨</p>
+    <p>— Your (very secret) Santa 🎅</p>
   </div>
-  <audio id="bgMusic" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_6c1a6f3f1c.mp3?filename=christmas-vibes-ambient-121027.mp3" type="audio/mpeg">
-  </audio>
 
   <script>
-    // Snowfall
+    // Snow
     const snowContainer = document.createElement('div');
-    snowContainer.style.position = 'fixed';
-    snowContainer.style.top = 0;
-    snowContainer.style.left = 0;
-    snowContainer.style.width = '100%';
-    snowContainer.style.height = '100%';
-    snowContainer.style.pointerEvents = 'none';
+    snowContainer.style.position='fixed'; snowContainer.style.top=0; snowContainer.style.left=0; 
+    snowContainer.style.width='100%'; snowContainer.style.height='100%'; snowContainer.style.pointerEvents='none';
     document.body.appendChild(snowContainer);
-
-    for (let i = 0; i < 40; i++) {
-      const snow = document.createElement('div');
-      snow.innerHTML = '❄';
-      snow.style.position = 'absolute';
-      snow.style.top = Math.random() * -100 + 'px';
-      snow.style.left = Math.random() * 100 + 'vw';
-      snow.style.fontSize = Math.random() * 20 + 10 + 'px';
-      snow.style.opacity = Math.random();
-      snow.style.animation = `fall ${Math.random() * 10 + 5}s linear infinite`;
-      snowContainer.appendChild(snow);
+    for(let i=0;i<40;i++){
+      const s=document.createElement('div'); s.innerHTML='❄'; 
+      s.style.position='absolute'; s.style.top=Math.random()*-100+'px'; s.style.left=Math.random()*100+'vw'; 
+      s.style.fontSize=Math.random()*20+10+'px'; s.style.opacity=Math.random(); 
+      s.style.animation=`fall ${Math.random()*10+5}s linear infinite`;
+      snowContainer.appendChild(s);
     }
-
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes fall {
-        to { transform: translateY(110vh); }
-      }
-    `;
+    const style=document.createElement('style');
+    style.innerHTML=`@keyframes fall{to{transform:translateY(110vh)}}`;
     document.head.appendChild(style);
 
+    // Music
+    const audio=document.createElement('audio');
+    audio.src='https://cdn.pixabay.com/download/audio/2022/12/06/audio_6c1a6f3f1c.mp3?filename=christmas-vibes-ambient-121027.mp3';
+    audio.loop=true;
+    document.body.appendChild(audio);
+    document.body.addEventListener('click',()=>{audio.play();},{once:true});
+
     // Game logic
-    const button = document.querySelector('.button');
+    const startButton = document.getElementById('start-game');
+    const gameCard = document.getElementById('game-card');
+    const boxesContainer = document.getElementById('boxes-container');
     const voucher = document.querySelector('.voucher');
-    button.addEventListener('click', (e) => {
-      e.preventDefault();
-      const answer = prompt('🎄 Tiny game time!
-What comes once in a minute, twice in a moment, but never in a thousand years?');
-      if (answer && answer.toLowerCase().trim() === 'm') {
-        voucher.innerHTML = '🎉 You won! 🎉<br/>Click again to unlock your gift 🎁';
-        button.onclick = () => {
-          document.getElementById('bgMusic').play();
-          window.open('https://www.amazon.in/gift-cards', '_blank');
-        };
-      } else {
-        alert('Oops 😄 Try again, Santa believes in you!');
-      }
+
+    startButton.addEventListener('click', ()=>{
+      startButton.style.display='none';
+      gameCard.style.display='block';
+      setupBoxes();
     });
 
-    // Start music on first interaction
-    document.body.addEventListener('click', () => {
-      document.getElementById('bgMusic').play();
-    }, { once: true });
+    function setupBoxes(){
+      boxesContainer.innerHTML='';
+      const correctIndex = Math.floor(Math.random()*4); // choose one box randomly
+      for(let i=0;i<4;i++){
+        const box = document.createElement('div');
+        box.className='box';
+        box.innerHTML='🎁';
+        box.onclick = ()=>{
+          if(i===correctIndex){
+            voucher.innerHTML="🎉 You found it! 🎉<br>Click below to unlock your gift 🎁";
+            boxesContainer.innerHTML='';
+            const giftBtn=document.createElement('button');
+            giftBtn.innerText="Open Gift 🎁";
+            giftBtn.className='button';
+            giftBtn.onclick=()=>{ window.open('https://www.amazon.in/gift-cards','_blank'); audio.play(); };
+            gameCard.appendChild(giftBtn);
+          } else {
+            alert("Oops! Try another box 😄");
+          }
+        };
+        boxesContainer.appendChild(box);
+      }
+    }
   </script>
 </body>
 </html>
